@@ -1,5 +1,5 @@
 # PollForge - Version Roadmap
-This document outlines the planned versions and features for the Online Survey System. The project follows a structured release plan with three major versions (v1, v2, v3), each containing minor versions with incremental improvements.
+This document outlines the planned versions and features for the PollForge. The project follows a structured release plan with three major versions (v1, v2, v3), each containing minor versions with incremental improvements.
 
 ## **v1 - Foundation Phase**
 ### **v1.0 - Core Survey System**
