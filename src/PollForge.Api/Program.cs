@@ -1,4 +1,6 @@
+using PollForge.Api.Extensions;
 using PollForge.Infrastructure;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,7 +9,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+
 var app = builder.Build();
+
+app.MapEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
@@ -17,11 +23,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapGet("/verify-google-token", () =>
-{
-    Console.WriteLine("Hello World!");
-}).RequireAuthorization();
 
 app.UseHttpsRedirection();
 app.Run();
