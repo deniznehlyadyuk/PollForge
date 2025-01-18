@@ -15,13 +15,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PollForge.Domain", "src\Pol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PollForge.Infrastructure", "src\PollForge.Infrastructure\PollForge.Infrastructure.csproj", "{520F3B58-AB1A-4116-A7FE-68D10697AD27}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PollForge.SharedKernel", "src\PollForge.SharedKernel\PollForge.SharedKernel.csproj", "{C16309CB-4D2F-4A57-955B-0B7EC075B4FC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{171D5BE5-91E0-4298-ACC5-8D07FB89CF07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,6 +43,13 @@ Global
 		{520F3B58-AB1A-4116-A7FE-68D10697AD27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{520F3B58-AB1A-4116-A7FE-68D10697AD27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{520F3B58-AB1A-4116-A7FE-68D10697AD27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C16309CB-4D2F-4A57-955B-0B7EC075B4FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C16309CB-4D2F-4A57-955B-0B7EC075B4FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C16309CB-4D2F-4A57-955B-0B7EC075B4FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C16309CB-4D2F-4A57-955B-0B7EC075B4FC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{171D5BE5-91E0-4298-ACC5-8D07FB89CF07} = {6D9E5EC9-FD3A-495E-8F72-81B9753E154C}
@@ -51,5 +57,9 @@ Global
 		{6A5E28E6-0E07-4A1A-BA6C-0705C17C134D} = {6D9E5EC9-FD3A-495E-8F72-81B9753E154C}
 		{AE4F2636-B450-4E26-9B14-9102024E6332} = {6D9E5EC9-FD3A-495E-8F72-81B9753E154C}
 		{520F3B58-AB1A-4116-A7FE-68D10697AD27} = {6D9E5EC9-FD3A-495E-8F72-81B9753E154C}
+		{C16309CB-4D2F-4A57-955B-0B7EC075B4FC} = {6D9E5EC9-FD3A-495E-8F72-81B9753E154C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A7793786-C575-4D93-9A33-ED2378FC659D}
 	EndGlobalSection
 EndGlobal
