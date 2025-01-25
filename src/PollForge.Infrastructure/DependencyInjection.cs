@@ -1,5 +1,4 @@
-﻿using Application.Abstractions.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,7 +8,7 @@ using PollForge.Infrastructure.Authentication;
 using PollForge.Infrastructure.Database;
 using PollForge.Infrastructure.Time;
 using PollForge.SharedKernel;
-using System.Text;
+using PollForge.Application.Abstractions.Data;
 
 namespace PollForge.Infrastructure;
 
@@ -19,26 +18,40 @@ public static class DependencyInjection
     {
         services.AddAuthorization();
 
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.RequireHttpsMetadata = false;
+        options.Audience = configuration["Authentication:Audience"]!;
+        options.MetadataAddress = configuration["Authentication:DiscoveryUrl"]!;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidIssuer = configuration["Authentication:Issuer"]!
+        };
+        
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
             {
-                options.RequireHttpsMetadata = true;
-                options.TokenValidationParameters = new TokenValidationParameters
+                context.Request.Cookies.TryGetValue("ID_TOKEN", out var idToken);
+
+                if (!string.IsNullOrEmpty(idToken))
                 {
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Secret"]!)),
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidAudience = configuration["Jwt:Audience"],
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+                    context.Token = idToken;
+                }
+                
+                return Task.CompletedTask;
+            }
+        };
+    });
 
         services.AddDbContext<PollForgeDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("Database")));
 
         services.AddHttpContextAccessor();
-        services.AddSingleton<ITokenProvider, TokenProvider>();
         services.AddSingleton<IUserContext, UserContext>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
+        services.AddSingleton<IKeycloakApi, KeycloakApi>();
 
         services.AddScoped<IPollForgeDbContext>(sp => sp.GetRequiredService<PollForgeDbContext>());
 

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PollForge.Domain.UserEntity;
 
-namespace Application.Abstractions.Data;
+namespace PollForge.Application.Abstractions.Data;
 
 public interface IPollForgeDbContext
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 using PollForge.Api.Endpoints;
-using PollForge.Api.Endpoints.Authentication;
 using System.Reflection;
 
 namespace PollForge.Api.Extensions;

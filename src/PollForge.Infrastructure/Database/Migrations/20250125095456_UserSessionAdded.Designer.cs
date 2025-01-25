@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PollForge.Infrastructure.Database;
@@ -11,9 +12,11 @@ using PollForge.Infrastructure.Database;
 namespace PollForge.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(PollForgeDbContext))]
-    partial class PollForgeDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250125095456_UserSessionAdded")]
+    partial class UserSessionAdded
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
