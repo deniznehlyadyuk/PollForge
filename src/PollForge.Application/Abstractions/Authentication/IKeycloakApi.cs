@@ -6,4 +6,5 @@ public interface IKeycloakApi
 {
     Task<Result<KeycloakTokenResponse>> Token(string code, string codeVerifier, CancellationToken cancellationToken);
     Task<Result<KeycloakTokenResponse>> Token(string refreshToken, CancellationToken cancellationToken);
+    Task<Result> Logout(string sessionRefreshToken, CancellationToken cancellationToken);
 }

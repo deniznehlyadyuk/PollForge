@@ -6,13 +6,13 @@ using PollForge.SharedKernel;
 
 namespace PollForge.Infrastructure.Authentication;
 
-public class KeycloakApi(IConfiguration configuration) : IKeycloakApi
+public class KeycloakApi(IConfiguration configuration, IOpenIdConfigGetter openIdConfigGetter) : IKeycloakApi
 {
     public async Task<Result<KeycloakTokenResponse>> Token(string code, string codeVerifier, CancellationToken cancellationToken)
     {
         using var client = new HttpClient();
 
-        var url = configuration["Authentication:TokenEndpoint"]!;
+        var openIdConfig = await openIdConfigGetter.Get();
 
         var parameters = new FormUrlEncodedContent(
         [
@@ -24,7 +24,7 @@ public class KeycloakApi(IConfiguration configuration) : IKeycloakApi
             new KeyValuePair<string, string>("redirect_uri", configuration["Authentication:RedirectUri"]!)
         ]);
 
-        var response = await client.PostAsync(url, parameters, cancellationToken);
+        var response = await client.PostAsync(openIdConfig.TokenEndpoint, parameters, cancellationToken);
 
         return await ParseResponse(response, cancellationToken);
     }
@@ -33,7 +33,7 @@ public class KeycloakApi(IConfiguration configuration) : IKeycloakApi
     {
         using var client = new HttpClient();
 
-        var url = configuration["Authentication:TokenEndpoint"]!;
+        var openIdConfig = await openIdConfigGetter.Get();
 
         var parameters = new FormUrlEncodedContent(
         [
@@ -43,9 +43,27 @@ public class KeycloakApi(IConfiguration configuration) : IKeycloakApi
             new KeyValuePair<string, string>("refresh_token", refreshToken),
         ]);
 
-        var response = await client.PostAsync(url, parameters, cancellationToken);
+        var response = await client.PostAsync(openIdConfig.TokenEndpoint, parameters, cancellationToken);
 
         return await ParseResponse(response, cancellationToken);
+    }
+
+    public async Task<Result> Logout(string refreshToken, CancellationToken cancellationToken)
+    {
+        using var client = new HttpClient();
+
+        var openIdConfig = await openIdConfigGetter.Get();
+
+        var parameters = new FormUrlEncodedContent(
+        [
+            new KeyValuePair<string, string>("client_id", configuration["Keycloak:ClientId"]!),
+            new KeyValuePair<string, string>("client_secret", configuration["Keycloak:ClientSecret"]!),
+            new KeyValuePair<string, string>("refresh_token", refreshToken),
+        ]);
+
+        var response = await client.PostAsync(openIdConfig.EndSessionEndpoint, parameters, cancellationToken);
+
+        return response.IsSuccessStatusCode ? Result.Success() : Result.Failure(Error.None);
     }
 
     private static async Task<Result<KeycloakTokenResponse>> ParseResponse(HttpResponseMessage response,

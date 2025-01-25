@@ -7,39 +7,20 @@ using PollForge.Application.Abstractions.Authentication;
 
 namespace PollForge.Infrastructure.Authentication;
 
-internal sealed class JwtValidator : IJwtValidator
+internal sealed class JwtValidator(IOpenIdConfigGetter openIdConfigGetter, IConfiguration configuration) : IJwtValidator
 {
-    private readonly IConfigurationManager<OpenIdConnectConfiguration> _configurationManager;
-    private readonly IConfiguration _configuration;
-    
-    public JwtValidator(IConfiguration configuration)
-    {
-        var httpClient = new HttpClient();
-        
-        _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
-            configuration["Authentication:DiscoveryUrl"],
-            new OpenIdConnectConfigurationRetriever(),
-            new HttpDocumentRetriever(httpClient)
-            {
-                RequireHttps = false
-            }
-        );
-
-        _configuration = configuration;
-    }
-    
     public async Task<bool> ValidateTokenAsync(string token)
     {
         var jwtHandler = new JwtSecurityTokenHandler();
 
-        var openIdConfig = await _configurationManager.GetConfigurationAsync(CancellationToken.None);
-
+        var openIdConfig = await openIdConfigGetter.Get();
+        
         var validationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
-            ValidIssuer = _configuration["Authentication:Issuer"],
+            ValidIssuer = configuration["Authentication:Issuer"],
             ValidateAudience = true,
-            ValidAudience = _configuration["Authentication:Audience"],
+            ValidAudience = configuration["Authentication:Audience"],
             ValidateLifetime = false,
             ValidateIssuerSigningKey = true,
             IssuerSigningKeys = openIdConfig.SigningKeys,

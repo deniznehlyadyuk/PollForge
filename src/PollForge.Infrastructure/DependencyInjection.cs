@@ -18,36 +18,36 @@ public static class DependencyInjection
     {
         services.AddAuthorization();
 
-services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.RequireHttpsMetadata = false;
-        options.MetadataAddress = configuration["Authentication:DiscoveryUrl"]!;
-        options.TokenValidationParameters = new TokenValidationParameters
+    services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
         {
-            ValidateIssuer = true,
-            ValidIssuer = configuration["Authentication:Issuer"],
-            ValidateAudience = true,
-            ValidAudience = configuration["Authentication:Audience"],
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-        };
-        
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
+            options.RequireHttpsMetadata = false;
+            options.MetadataAddress = configuration["Authentication:DiscoveryUrl"]!;
+            options.TokenValidationParameters = new TokenValidationParameters
             {
-                context.Request.Cookies.TryGetValue("ID_TOKEN", out var idToken);
-
-                if (!string.IsNullOrEmpty(idToken))
+                ValidateIssuer = true,
+                ValidIssuer = configuration["Authentication:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = configuration["Authentication:Audience"],
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+            };
+            
+            options.Events = new JwtBearerEvents
+            {
+                OnMessageReceived = context =>
                 {
-                    context.Token = idToken;
+                    context.Request.Cookies.TryGetValue("ID_TOKEN", out var idToken);
+
+                    if (!string.IsNullOrEmpty(idToken))
+                    {
+                        context.Token = idToken;
+                    }
+                    
+                    return Task.CompletedTask;
                 }
-                
-                return Task.CompletedTask;
-            }
-        };
-    });
+            };
+        });
 
         services.AddDbContext<PollForgeDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("Database")));
@@ -57,6 +57,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IKeycloakApi, KeycloakApi>();
         services.AddSingleton<IJwtValidator, JwtValidator>();
+        services.AddSingleton<IOpenIdConfigGetter, OpenIdConfigGetter>();
 
         services.AddScoped<IPollForgeDbContext>(sp => sp.GetRequiredService<PollForgeDbContext>());
 
