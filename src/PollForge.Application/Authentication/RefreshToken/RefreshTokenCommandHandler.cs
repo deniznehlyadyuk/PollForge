@@ -6,17 +6,23 @@ using PollForge.Application.Abstractions.Data;
 using PollForge.Application.Abstractions.Messaging;
 using PollForge.SharedKernel;
 
-namespace PollForge.Application.Users.RefreshToken;
+namespace PollForge.Application.Authentication.RefreshToken;
 
 internal sealed class RefreshTokenCommandHandler(
     IPollForgeDbContext dbContext,
     IKeycloakApi keycloakApi,
     IHttpContextAccessor httpContextAccessor,
-    IDateTimeProvider dateTimeProvider) : ICommandHandler<RefreshTokenCommand>
+    IDateTimeProvider dateTimeProvider,
+    IJwtValidator jwtValidator) : ICommandHandler<RefreshTokenCommand>
 {
     public async Task<Result> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         if (!httpContextAccessor.HttpContext.Request.Cookies.TryGetValue("ID_TOKEN", out var idToken))
+        {
+            return Result.Failure(Error.None);
+        }
+
+        if (!await jwtValidator.ValidateTokenAsync(idToken))
         {
             return Result.Failure(Error.None);
         }

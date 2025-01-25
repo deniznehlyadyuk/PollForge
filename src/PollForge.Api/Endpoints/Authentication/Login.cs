@@ -2,11 +2,11 @@
 using MediatR;
 using PollForge.Api.Extensions;
 using PollForge.Api.Infrastructure;
-using PollForge.Application.Users.KeycloakLogin;
+using PollForge.Application.Authentication.Login;
 
 namespace PollForge.Api.Endpoints.Authentication;
 
-public class KeycloakLogin : IEndpoint
+public class Login : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder app)
     {

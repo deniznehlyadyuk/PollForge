@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using PollForge.Api.Extensions;
 using PollForge.Api.Infrastructure;
-using PollForge.Application.Users.Me;
+using PollForge.Application.Authentication.Me;
 
 namespace PollForge.Api.Endpoints.Authentication;
 

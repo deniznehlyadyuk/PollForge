@@ -22,11 +22,15 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.RequireHttpsMetadata = false;
-        options.Audience = configuration["Authentication:Audience"]!;
         options.MetadataAddress = configuration["Authentication:DiscoveryUrl"]!;
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidIssuer = configuration["Authentication:Issuer"]!
+            ValidateIssuer = true,
+            ValidIssuer = configuration["Authentication:Issuer"],
+            ValidateAudience = true,
+            ValidAudience = configuration["Authentication:Audience"],
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
         };
         
         options.Events = new JwtBearerEvents
@@ -52,6 +56,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         services.AddSingleton<IUserContext, UserContext>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<IKeycloakApi, KeycloakApi>();
+        services.AddSingleton<IJwtValidator, JwtValidator>();
 
         services.AddScoped<IPollForgeDbContext>(sp => sp.GetRequiredService<PollForgeDbContext>());
 

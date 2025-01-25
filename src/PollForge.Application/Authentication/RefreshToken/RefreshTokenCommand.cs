@@ -1,5 +1,5 @@
 ﻿using PollForge.Application.Abstractions.Messaging;
 
-namespace PollForge.Application.Users.RefreshToken;
+namespace PollForge.Application.Authentication.RefreshToken;
 
 public sealed record RefreshTokenCommand() : ICommand;

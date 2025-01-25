@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using PollForge.Application.Abstractions.Messaging;
 using PollForge.SharedKernel;
 
-namespace PollForge.Application.Users.Me;
+namespace PollForge.Application.Authentication.Me;
 
 internal sealed class MeCommandHandler(IHttpContextAccessor httpContextAccessor) : ICommandHandler<MeCommand, MeCommandResponse>
 {

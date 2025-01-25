@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using PollForge.Api.Extensions;
 using PollForge.Api.Infrastructure;
-using PollForge.Application.Users.RefreshToken;
+using PollForge.Application.Authentication.RefreshToken;
 
 namespace PollForge.Api.Endpoints.Authentication;
 

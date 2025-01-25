@@ -6,7 +6,7 @@ using PollForge.Application.Abstractions.Messaging;
 using PollForge.Domain.UserEntity;
 using PollForge.SharedKernel;
 
-namespace PollForge.Application.Users.KeycloakLogin;
+namespace PollForge.Application.Authentication.Login;
 
 internal sealed class LoginCommandHandler(
     IPollForgeDbContext dbContext,
@@ -14,7 +14,6 @@ internal sealed class LoginCommandHandler(
     IDateTimeProvider dateTimeProvider,
     IKeycloakApi keycloakApi) : ICommandHandler<LoginCommand>
 {
-
     public async Task<Result> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var keycloakResponseResult = await keycloakApi.Token(request.Code, request.CodeVerifier, cancellationToken);
